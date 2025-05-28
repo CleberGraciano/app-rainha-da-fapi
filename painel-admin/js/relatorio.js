@@ -132,7 +132,7 @@ setInterval(async () => {
   await carregarParticipantes();
 }, 5000);
 
-async function baixarPDF() {
+function baixarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
