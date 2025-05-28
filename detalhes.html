@@ -138,6 +138,7 @@
       display: none;
       text-align: center;
       margin-top: 1rem;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -151,7 +152,7 @@
 
   <div class="candidata">
     <div class="estrela">
-      <img hidden src="https://via.placeholder.com/100" alt="Candidata" loading="lazy">
+  
       <div class="codigoCandidata">Código Candidata</div>
     </div>
     <div class="nome">Nome da Candidata</div>
@@ -239,34 +240,33 @@
       });
     }
 
-    function verificarVoto() {
+    async function verificarEVotar() {
       loader.style.display = 'block';
-      fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`)
-        .then(res => res.json())
-        .then(jaVotou => {
-          if (jaVotou) {
-            loader.style.display = 'none';
-            alert("Jurado já votou Nesse Candidato(a)");
-            history.back();
-          } else {
-            enviarPontuacao(participanteId, notasSelecionadas, cpfJurado)
-              .then(() => {
-                loader.style.display = 'none';
-                alert("Votado com sucesso");
-                history.back();
-              });
-          }
-        })
-        .catch(err => {
+      enviarBtn.disabled = true;
+      enviarBtn.classList.remove("ativa");
+      try {
+        const res = await fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`);
+        const jaVotou = await res.json();
+        if (jaVotou) {
           loader.style.display = 'none';
-          console.error("Erro ao consultar a API:", err);
-          alert("Erro ao verificar voto");
-        });
+          alert("Jurado já votou Nesse Candidato(a)");
+          setTimeout(() => history.back(), 1000);
+        } else {
+          await enviarPontuacao(participanteId, notasSelecionadas, cpfJurado);
+          loader.style.display = 'none';
+          alert("Votado com sucesso");
+          setTimeout(() => history.back(), 1000);
+        }
+      } catch (err) {
+        loader.style.display = 'none';
+        console.error("Erro ao consultar a API:", err);
+        alert("Erro ao verificar voto");
+      }
     }
 
     enviarBtn.onclick = () => {
       if (Object.keys(notasSelecionadas).length === qtdAvaliacoes) {
-        verificarVoto();
+        verificarEVotar();
       } else {
         alert('Favor selecione todas avaliações.');
       }
