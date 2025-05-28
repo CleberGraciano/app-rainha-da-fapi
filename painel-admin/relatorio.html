@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<title>Menu Dinâmico Responsivo</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; 
+    font-family: Arial, sans-serif;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  nav {
+    background-color: #222;
+    color: white;
+    width: 220px;
+    min-height: 100vh;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: transform 0.3s ease;
+  }
+
+  nav a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  nav a:hover {
+    background-color: #444;
+  }
+
+  main {
+    margin-left: 220px;
+    padding: 20px;
+    flex-grow: 1;
+  }
+
+  #btnMenu {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #222;
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      transform: translateX(-100%);
+      position: fixed;
+      z-index: 999;
+      height: 100%;
+    }
+
+    nav.active {
+      transform: translateX(0);
+    }
+
+    main {
+      margin-left: 0;
+    }
+
+    #btnMenu {
+      display: block;
+    }
+  }
+</style>
+</head>
+<body>
+
+<button id="btnMenu">&#9776;</button>
+
+<nav id="menu">
+  <a href="apresentacao.html" data-page="apresentacao.html">Início</a>
+  <a href="categorias.html" data-page="categorias.html">Categorias</a>
+  <a href="participantes.html" data-page="participantes.html">Participantes</a>
+  <a href="usuario.html" data-page="usuario.html">Usuários</a>
+  <a href="jurados.html" data-page="jurados.html">Jurados</a>
+  <a href="avaliacao.html" data-page="avaliacao.html">Tipo Avaliação</a>
+  <a href="#" data-page="relatorio.html">Relatório Ranking</a>
+   <a href="../index.html" target="_blank" rel="noopener noreferrer">Acesso Portal Votação</a>
+  <a href="#" onclick="resetarPontuacoes()" id="resetPontuacoes">Resetar Pontuações</a>
+  <a href="#" onclick="logout()" id="logoutBtn">Sair</a>
+</nav>
+
+<main >
+  <section>
+
+<div class="container my-5">
+  <h2 class="text-center mb-4">Ranking de Ganhadoras</h2>
+<div class="d-flex justify-content-end gap-2 mb-3">
+  <button class="btn btn-danger" onclick="baixarPDF()">
+    📄 Exportar PDF
+  </button>
+  <button class="btn btn-primary" onclick="baixarExcel()">📊 Exportar Excel</button>
+</div>
+  <!-- Filtros -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <input type="text" id="filtroNome" class="form-control" placeholder="Filtrar por nome">
+    </div>
+    
+    <div class="col-md-3">
+      <select id="filtroCategoria" class="form-select">
+        <option value="">Todas as categorias</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <input type="number" id="filtroPontuacao" hidden class="form-control" placeholder="Pontuação mínima">
+    </div>
+    
+    <div class="col-md-3">
+      <input type="text" id="filtroAvaliacao" class="form-control" hidden placeholder="Nome do tipo de avaliação">
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Medalha</th>
+          <th hidden>Imagem</th>
+          <th >Código</th>
+          <th>Nome</th>
+          <th>Idade</th>
+          <th hidden>Altura</th>
+          <th>Sexo</th>
+          <th>Categoria</th>
+          <th>Total Pontuação</th>
+          <th>Tipos de Avaliação</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaParticipantes"></tbody>
+    </table>
+  </div>
+</div>
+</section>
+<script src="../js/config.js"></script>
+ <script src="js/script.js" ></script>
+<script src="js/relatorio.js"></script>
+</main>
+
+<script>
+  const menu = document.getElementById('menu');
+  const btnMenu = document.getElementById('btnMenu');
+  const resetPontuacoes = document.getElementById('resetPontuacoes');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Alternar menu no mobile
+  btnMenu.addEventListener('click', () => {
+    menu.classList.toggle('active');
+  });
+</script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+</html>
+
+
+
+
