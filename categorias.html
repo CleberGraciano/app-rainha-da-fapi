@@ -53,9 +53,33 @@
       margin: 0 auto;
       padding-top: 2rem;
     }
+
+    #btnAdmin {
+      display: none;
+      margin-top: 30px;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    #btnAdmin i {
+      margin-right: 8px;
+    }
+
+    #btnAdmin:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
+
+ 
 
 <!-- Navbar -->
 <nav class="navbar navbar-gradient px-3">
@@ -73,6 +97,9 @@
   <div id="categoria-lista" class="row g-4">
     <!-- Os cards serão inseridos aqui dinamicamente -->
   </div>
+   <button id="btnAdmin">
+    <i class="fas fa-user-shield"></i> Acessar o Painel Administrativo
+  </button>
 </div>
 <script src="js/config.js"></script>
 <script src="js/categorias.js"></script>

@@ -1,57 +1,43 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-
-  <meta charset="UTF-8">
-  <title>Sistema de Avaliação</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/menu.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login com CPF</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
   <style>
     body {
-      background-color: #f8f9fa;
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    header {
-      background-color: #333;
-      color: white;
-      padding: 10px 20px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
+      background-color: black;
+      height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    nav a {
-      color: white;
-      margin-right: 15px;
-      text-decoration: none;
-    }
-
-    main {
-      display: flex;
-      align-items: center;
       justify-content: center;
-      height: calc(100vh - 60px);
-      margin-top: 60px;
+      align-items: center;
     }
-
     .card {
-      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 30px;
+      width: 90%;
       max-width: 400px;
+      background-color: black;
+    }
+    .btn-primary {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
     }
 
-    .menu a {
-      display: inline-block;
-      margin-right: 10px;
+    .logo {
+      display: block;
+    
+      max-height: 350px;
+    }
+    .texto {
+      color: white;
+    }
+
+    .texto-label{
+      color: white;
     }
   </style>
 
@@ -62,26 +48,24 @@
 
 
 
-  <main>
   <div id="login-card" class="card shadow-lg">
-    <div class="card-body">
-      <h4 class="card-title text-center mb-4">Login com CPF</h4>
+    <img src="../img/logo-concurso.png" alt="Logo" class="logo" />
+    <div class="card-body login-form">
+      <h4 class="card-title text-center mb-4 texto" c>Painel ADMIN</h4>
 
       <div class="mb-3">
-        <label for="cpf" class="form-label">CPF</label>
-        <input type="text" class="form-control" id="cpf" placeholder="Digite seu CPF">
+        <label for="cpf" class="form-label texto-label">CPF</label>
+        <input type="text"  id="cpf" placeholder="___.___.___-__" maxlength="14">
       </div>
 
       <div class="d-grid">
-        <button class="btn btn-primary" onclick="login()">Entrar</button>
+        <button class="btn btn-primary" onclick="login()">ENTRAR</button>
       </div>
     </div>
   </div>
 
-  <div id="painel-msg" class="alert alert-success text-center d-none" style="max-width: 500px;">
-    ✅ Acesso concedido ao Painel Administrativo.
-  </div>
-</main>
+
+
 <script src="../js/config.js"></script>
   <script>
     function login() {
@@ -90,7 +74,7 @@
   if(cpf===""){
     alert("Favor Digitar um CPF valido!!")
   } else {
-    fetch(`https://www.rainhadafapi2025.shop/api/usuarios/verifica-admin/${cpf}`)
+    fetch(`${API_BASE_URL}/usuarios/verifica-admin/${cpf}`)
     .then(res => {
       if (!res.ok) throw new Error("CPF não encontrado ou erro na verificação");
       return res.json();
@@ -116,74 +100,7 @@ function logout() {
   sessionStorage.clear();
   location.reload(); // ou redirecionar para a tela de login
 }
-
-function renderMenu() {
-  const cpf = sessionStorage.getItem("cpf");
-  const isAdmin = sessionStorage.getItem("admin") === "true";
-
-  const menuContainer = document.getElementById("menu-container");
-  if (!menuContainer) return;
-
-  menuContainer.innerHTML = "";
-
-  // Botão do menu (ícone ☰)
-  const toggleBtn = document.createElement("button");
-  toggleBtn.id = "btnMenu";
-  toggleBtn.innerHTML = "&#9776;";
-  menuContainer.appendChild(toggleBtn);
-
-  const nav = document.createElement("nav");
-  nav.id = "menu";
-
-  if (cpf) {
-    if (isAdmin) {
-      const links = [
-        { href: "apresentacao.html", text: "Início", dataPage: "apresentacao.html" },
-        { href: "categorias.html", text: "Categorias", dataPage: "categorias.html" },
-        { href: "participantes.html", text: "Participantes", dataPage: "participantes.html" },
-        { href: "usuario.html", text: "Usuários", dataPage: "usuario.html" },
-        { href: "jurados.html", text: "Jurados", dataPage: "jurados.html" },
-        { href: "avaliacao.html", text: "Tipo Avaliação", dataPage: "avaliacao.html" },
-        { href: "#", text: "Relatório Ranking", dataPage: "relatorio.html" },
-        { 
-          href: "../index.html", 
-          text: "Acesso Portal Votação", 
-          target: "_blank", 
-          rel: "noopener noreferrer" 
-        },
-        { href: "#", text: "Resetar Pontuações", onclick: "resetarPontuacoes()", id: "resetPontuacoes" },
-      ];
-
-      links.forEach(item => {
-        const link = document.createElement("a");
-        link.href = item.href;
-        link.innerText = item.text;
-
-        if (item.dataPage) link.setAttribute("data-page", item.dataPage);
-        if (item.target) link.setAttribute("target", item.target);
-        if (item.rel) link.setAttribute("rel", item.rel);
-        if (item.onclick) link.setAttribute("onclick", item.onclick);
-        if (item.id) link.id = item.id;
-
-        nav.appendChild(link);
-      });
-    } else {
-      const link = document.createElement("a");
-      link.href = "usuario.html";
-      link.innerText = "Cadastro de Usuário";
-      nav.appendChild(link);
-    }
-
-    const logoutLink = document.createElement("a");
-    logoutLink.href = "#";
-    logoutLink.innerText = "Sair";
-    logoutLink.setAttribute("onclick", "logout()");
-    logoutLink.id = "logoutBtn";
-    nav.appendChild(logoutLink);
-  }
-
-  menuContainer.appendChild(nav);
-}
+ 
 
 
 function verificaUsuarioLogado(){
@@ -196,11 +113,7 @@ function verificaUsuarioLogado(){
   }
 }
 
-// Renderiza o menu automaticamente se estiver logado
-document.addEventListener("DOMContentLoaded", () => {
-  renderMenu();
-});
-
   </script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

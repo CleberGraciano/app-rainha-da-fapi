@@ -39,3 +39,6 @@ function limparCpf(cpf) {
         console.error(error);
       }
     });
+
+
+    
