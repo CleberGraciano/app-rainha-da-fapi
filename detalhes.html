@@ -165,12 +165,12 @@
   
 
   <script defer>
-    const tiposUrl = 'https://www.rainhadafapi2025.shop/api/tipos-avaliacao';
+    const tiposUrl = '/api/tipos-avaliacao';
     const avaliacoesContainer = document.getElementById('avaliacoes');
     const participanteId = new URLSearchParams(window.location.search).get('id');
     const cpfJurado = new URLSearchParams(window.location.search).get('cpfJurado');
     const nomeCat = new URLSearchParams(window.location.search).get('categoria');
-    const participanteUrl = `https://www.rainhadafapi2025.shop/api/participantes/${participanteId}`;
+    const participanteUrl = `/api/participantes/${participanteId}`;
 
     const nomeCategoria = document.getElementById("categoria");
     const enviarBtn = document.getElementById("enviarNotas");
@@ -232,7 +232,7 @@
       .catch(err => console.error('Erro ao buscar tipos de avaliação:', err));
 
     async function enviarPontuacao(participanteId, notasSelecionadas, cpfJurado) {
-      const url = `https://www.rainhadafapi2025.shop/api/participantes/${participanteId}/jurado/${cpfJurado}/pontuacoes`;
+      const url = `/api/participantes/${participanteId}/jurado/${cpfJurado}/pontuacoes`;
       const payload = Object.entries(notasSelecionadas).map(([tipoAvaliacaoId, valor]) => ({ tipoAvaliacaoId, valor }));
       return fetch(url, {
         method: 'POST',
@@ -246,7 +246,7 @@
       enviarBtn.disabled = true;
       enviarBtn.classList.remove("ativa");
       try {
-        const res = await fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`);
+        const res = await fetch(`/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`);
         const jaVotou = await res.json();
         if (jaVotou) {
           loader.style.display = 'none';

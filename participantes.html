@@ -203,7 +203,7 @@
   async function carregarParticipantes() {
     try {
       const resposta = await fetch(
-        `https://www.rainhadafapi2025.shop/api/participantes/categoria/${id}`
+        `/api/participantes/categoria/${id}`
       );
 
       if (!resposta.ok) {
@@ -219,7 +219,7 @@
 
       // Buscar IDs dos participantes já votados pelo jurado nessa categoria
       const votosRes = await fetch(
-        `https://www.rainhadafapi2025.shop/api/pontuacoes/jurado/${cpfJurado}/categoria/${id}/participantes-votados`
+        `/api/pontuacoes/jurado/${cpfJurado}/categoria/${id}/participantes-votados`
       );
       const idsVotados = await votosRes.json();
 
@@ -241,7 +241,7 @@
 
   async function verificarVotoParticipante(participanteId) {
     try {
-      const url = `https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`;
+      const url = `/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Erro na verificação de voto');
       return await res.json();
