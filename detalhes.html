@@ -133,6 +133,12 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    #loader {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -145,7 +151,7 @@
 
   <div class="candidata">
     <div class="estrela">
-  
+      <img hidden src="https://via.placeholder.com/100" alt="Candidata" loading="lazy">
       <div class="codigoCandidata">Código Candidata</div>
     </div>
     <div class="nome">Nome da Candidata</div>
@@ -154,6 +160,7 @@
   <div class="avaliacoes" id="avaliacoes"></div>
 
   <button class="enviar" id="enviarNotas">ENVIAR NOTAS</button>
+  <div id="loader">Enviando... Aguarde.</div>
 
   <script defer>
     const tiposUrl = 'https://www.rainhadafapi2025.shop/api/tipos-avaliacao';
@@ -165,6 +172,7 @@
 
     const nomeCategoria = document.getElementById("categoria");
     const enviarBtn = document.getElementById("enviarNotas");
+    const loader = document.getElementById("loader");
 
     const textoCat = document.createElement("div");
     textoCat.className = "text-uppercase fw-bold text-warning mb-0";
@@ -232,21 +240,25 @@
     }
 
     function verificarVoto() {
+      loader.style.display = 'block';
       fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`)
         .then(res => res.json())
         .then(jaVotou => {
           if (jaVotou) {
+            loader.style.display = 'none';
             alert("Jurado já votou Nesse Candidato(a)");
             history.back();
           } else {
             enviarPontuacao(participanteId, notasSelecionadas, cpfJurado)
               .then(() => {
+                loader.style.display = 'none';
                 alert("Votado com sucesso");
                 history.back();
               });
           }
         })
         .catch(err => {
+          loader.style.display = 'none';
           console.error("Erro ao consultar a API:", err);
           alert("Erro ao verificar voto");
         });
