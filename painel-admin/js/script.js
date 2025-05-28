@@ -65,7 +65,7 @@ function logout() {
 
     function resetarPontuacoes() {
       if (confirm("Tem certeza que deseja resetar todas as pontuações?")) {
-        fetch('https://www.rainhadafapi2025.shop/admin/reset-pontuacoes', {
+        fetch(`${API_BASE_URL}/admin/reset-pontuacoes`, {
           method: 'POST'
         })
         .then(response => response.text())
