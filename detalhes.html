@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <title>Avaliação de Candidata</title>
   <style>
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family:"Montserrat", sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f8f8f8;
     }
+
     .top-bar {
       background: linear-gradient(to right, #1b1464, #d4145a);
       color: white;
@@ -22,39 +23,47 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .categoria {
       text-align: center;
       color: #ff6600;
       font-weight: bold;
       margin: 1rem 0 0.5rem 0;
     }
+
     .candidata {
       text-align: center;
     }
+
     .candidata img {
       width: 100px;
       height: 100px;
       border-radius: 50%;
       object-fit: cover;
     }
+
     .estrela {
       position: relative;
       display: inline-block;
     }
+
     .codigoCandidata {
       font-size: 50px;
       font-weight: bold;
     }
+
     .nome {
       font-weight: 500;
       margin-top: 0.5rem;
     }
+
     .avaliacoes {
       padding: 1rem;
       width: 80%;
       max-width: 300px;
       margin: 1rem auto;
     }
+
     .avaliacao {
       background: white;
       margin-bottom: 1rem;
@@ -62,13 +71,16 @@
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+
     .avaliacao h4 {
       margin-bottom: 0.5rem;
     }
+
     .notas {
       display: flex;
       gap: 0.5rem;
     }
+
     .nota {
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -77,12 +89,27 @@
       background-color: white;
       transition: background-color 0.2s ease, border 0.2s ease;
     }
+
     .nota.selecionada {
       background-color: #72b626;
       color: white;
       font-weight: bold;
       border: 2px solid #4a861a;
     }
+
+    .avatar {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .enviar {
       display: block;
       width: 80%;
@@ -97,123 +124,141 @@
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
+      opacity: 0.5;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .enviar.ativa {
+      opacity: 1;
+      pointer-events: auto;
     }
   </style>
 </head>
 <body>
   <div class="top-bar">
     <div></div>
-    <div class="avatar"><img src="img/logo-concurso.png" width="60" height="60"></div>
+    <div class="avatar"><img src="img/logo-concurso.png" width="60" height="60" loading="lazy"></div>
   </div>
 
   <div class="categoria" id="categoria"></div>
+
   <div class="candidata">
     <div class="estrela">
   
-      <div class="codigoCandidata" id="codigoCandidata">Código Candidata</div>
+      <div class="codigoCandidata">Código Candidata</div>
     </div>
-    <div class="nome" id="nomeCandidata">Nome da Candidata</div>
+    <div class="nome">Nome da Candidata</div>
   </div>
 
   <div class="avaliacoes" id="avaliacoes"></div>
+
   <button class="enviar" id="enviarNotas">ENVIAR NOTAS</button>
 
   <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      const participanteId = new URLSearchParams(window.location.search).get('id');
-      const cpfJurado = new URLSearchParams(window.location.search).get('cpfJurado');
-      const categoria = new URLSearchParams(window.location.search).get('categoria');
-      const avaliacoesContainer = document.getElementById('avaliacoes');
-      const notasSelecionadas = {};
-      const notasDisponiveis = [5, 6, 7, 8, 9, 10];
-      let qtdAvaliacoes = 0;
+    const tiposUrl = 'https://www.rainhadafapi2025.shop/api/tipos-avaliacao';
+    const avaliacoesContainer = document.getElementById('avaliacoes');
+    const participanteId = new URLSearchParams(window.location.search).get('id');
+    const cpfJurado = new URLSearchParams(window.location.search).get('cpfJurado');
+    const nomeCat = new URLSearchParams(window.location.search).get('categoria');
+    const participanteUrl = `https://www.rainhadafapi2025.shop/api/participantes/${participanteId}`;
 
-      document.getElementById('categoria').textContent = `CATEGORIA ${categoria}`;
+    const nomeCategoria = document.getElementById("categoria");
+    const enviarBtn = document.getElementById("enviarNotas");
 
-      fetch(`https://www.rainhadafapi2025.shop/api/participantes/${participanteId}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('nomeCandidata').textContent = data.nome;
-          document.getElementById('codigoCandidata').textContent = data.codigo;
-          if (data.imagem) {
-            document.getElementById('fotoCandidata').src = `data:image/jpeg;base64,${data.imagem}`;
+    const textoCat = document.createElement("div");
+    textoCat.className = "text-uppercase fw-bold text-warning mb-0";
+    textoCat.textContent = `CATEGORIA ${nomeCat}`;
+    nomeCategoria.appendChild(textoCat);
+
+    const notasDisponiveis = [5, 6, 7, 8, 9, 10];
+    const notasSelecionadas = {};
+
+    fetch(participanteUrl)
+      .then(res => res.json())
+      .then(data => {
+        document.querySelector('.nome').textContent = data.nome;
+        document.querySelector('.codigoCandidata').textContent = data.codigo;
+        const imgEl = document.querySelector('.candidata img');
+        imgEl.src = data.imagem ? `data:image/jpeg;base64,${data.imagem}` : 'https://via.placeholder.com/100';
+        imgEl.hidden = false;
+      })
+      .catch(err => console.error('Erro ao buscar participante:', err));
+
+    function criarBlocoAvaliacao(tipo) {
+      const div = document.createElement('div');
+      div.className = 'avaliacao';
+      div.innerHTML = `<h4>${tipo.nome}</h4>`;
+      const notasDiv = document.createElement('div');
+      notasDiv.className = 'notas';
+
+      notasDisponiveis.forEach(nota => {
+        const btn = document.createElement('div');
+        btn.className = 'nota';
+        btn.textContent = nota;
+        btn.onclick = () => {
+          notasSelecionadas[tipo.id] = nota;
+          [...notasDiv.children].forEach(n => n.classList.remove('selecionada'));
+          btn.classList.add('selecionada');
+
+          if (Object.keys(notasSelecionadas).length === qtdAvaliacoes) {
+            enviarBtn.classList.add("ativa");
           }
-        })
-        .catch(err => console.error('Erro ao buscar participante:', err));
+        };
+        notasDiv.appendChild(btn);
+      });
 
-      function criarBlocoAvaliacao(tipo) {
-        const div = document.createElement('div');
-        div.className = 'avaliacao';
-        div.innerHTML = `<h4>${tipo.nome}</h4>`;
+      div.appendChild(notasDiv);
+      avaliacoesContainer.appendChild(div);
+    }
 
-        const notasDiv = document.createElement('div');
-        notasDiv.className = 'notas';
+    let qtdAvaliacoes = 0;
+    fetch(tiposUrl)
+      .then(res => res.json())
+      .then(data => {
+        qtdAvaliacoes = data.length;
+        data.forEach(tipo => criarBlocoAvaliacao(tipo));
+      })
+      .catch(err => console.error('Erro ao buscar tipos de avaliação:', err));
 
-        notasDisponiveis.forEach(nota => {
-          const btn = document.createElement('div');
-          btn.className = 'nota';
-          btn.textContent = nota;
-          btn.addEventListener('click', () => {
-            notasSelecionadas[tipo.id] = nota;
-            [...notasDiv.children].forEach(n => n.classList.remove('selecionada'));
-            btn.classList.add('selecionada');
-          });
-          notasDiv.appendChild(btn);
-        });
+    async function enviarPontuacao(participanteId, notasSelecionadas, cpfJurado) {
+      const url = `https://www.rainhadafapi2025.shop/api/participantes/${participanteId}/jurado/${cpfJurado}/pontuacoes`;
+      const payload = Object.entries(notasSelecionadas).map(([tipoAvaliacaoId, valor]) => ({ tipoAvaliacaoId, valor }));
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
 
-        div.appendChild(notasDiv);
-        return div;
-      }
-
-      fetch('https://www.rainhadafapi2025.shop/api/tipos-avaliacao')
+    function verificarVoto() {
+      fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`)
         .then(res => res.json())
-        .then(data => {
-          qtdAvaliacoes = data.length;
-          const fragment = document.createDocumentFragment();
-          data.forEach(tipo => fragment.appendChild(criarBlocoAvaliacao(tipo)));
-          avaliacoesContainer.appendChild(fragment);
-        })
-        .catch(err => console.error('Erro ao buscar tipos de avaliação:', err));
-
-      async function enviarPontuacao() {
-        const url = `https://www.rainhadafapi2025.shop/api/participantes/${participanteId}/jurado/${cpfJurado}/pontuacoes`;
-        const payload = Object.entries(notasSelecionadas).map(([tipoAvaliacaoId, valor]) => ({ tipoAvaliacaoId, valor }));
-
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        return response.ok;
-      }
-
-      async function verificarVoto() {
-        try {
-          const res = await fetch(`https://www.rainhadafapi2025.shop/api/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`);
-          const jaVotou = await res.json();
+        .then(jaVotou => {
           if (jaVotou) {
             alert("Jurado já votou Nesse Candidato(a)");
-            window.history.back();
+            history.back();
           } else {
-            const sucesso = await enviarPontuacao();
-            alert(sucesso ? "Votado com sucesso" : "Erro ao enviar notas");
-            window.history.back();
+            enviarPontuacao(participanteId, notasSelecionadas, cpfJurado)
+              .then(() => {
+                alert("Votado com sucesso");
+                history.back();
+              });
           }
-        } catch (error) {
-          console.error("Erro ao verificar voto", error);
+        })
+        .catch(err => {
+          console.error("Erro ao consultar a API:", err);
           alert("Erro ao verificar voto");
-        }
-      }
+        });
+    }
 
-      document.getElementById('enviarNotas').addEventListener('click', () => {
-        if (Object.keys(notasSelecionadas).length === qtdAvaliacoes) {
-          verificarVoto();
-        } else {
-          alert('Favor selecione todas avaliações.');
-        }
-      });
-    });
+    enviarBtn.onclick = () => {
+      if (Object.keys(notasSelecionadas).length === qtdAvaliacoes) {
+        verificarVoto();
+      } else {
+        alert('Favor selecione todas avaliações.');
+      }
+    };
   </script>
 </body>
 </html>
