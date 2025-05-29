@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Limpar Tabelas</title>
+</head>
+<body>
+    <h2>Limpar dados das tabelas</h2>
+
+    <select id="selectTabela">
+        <option value="TODAS">-- Todas as tabelas --</option>
+    </select>
+
+    <button onclick="limpar()">Limpar</button>
+
+    <p id="status"></p>
+<script src="../js/config.js"></script>
+    <script>
+        async function carregarTabelas() {
+            const response = await fetch(`${API_BASE_URL}/tabelas`);
+            const tabelas = await response.json();
+            const select = document.getElementById('selectTabela');
+            tabelas.forEach(tabela => {
+                const option = document.createElement('option');
+                option.value = tabela;
+                option.textContent = tabela;
+                select.appendChild(option);
+            });
+        }
+
+        async function limpar() {
+            const tabela = document.getElementById('selectTabela').value;
+            const status = document.getElementById('status');
+
+            try {
+                if (tabela === 'TODAS') {
+                    await fetch(`${API_BASE_URL}/tabelas/`, { method: 'DELETE' });
+                    status.textContent = 'Todas as tabelas foram apagadas.';
+                } else {
+                    await fetch(`${API_BASE_URL}/tabelas/` + tabela, { method: 'DELETE' });
+                    status.textContent = `Tabela ${tabela} apagada.`;
+                }
+            } catch (e) {
+                status.textContent = 'Erro ao apagar dados: ' + e.message;
+            }
+        }
+
+        // Carrega tabelas ao iniciar
+        carregarTabelas();
+    </script>
+</body>
+</html>
