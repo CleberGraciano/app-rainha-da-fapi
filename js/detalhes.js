@@ -59,7 +59,7 @@ const INTERVALO_RETRY_MS = 2000;
 
 function carregarAvaliacoesComPolling(tentativa = 1) {
   loader.style.display = 'block';
-  loader.textContent = `Carregando avaliações... (tentativa ${tentativa})`;
+  loader.textContent = `Aguarde Enviando votação ... )`;
 
   fetch(tiposUrl)
     .then(res => {
