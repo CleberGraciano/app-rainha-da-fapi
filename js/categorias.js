@@ -52,7 +52,10 @@
 
     const cpf = getCpfJuradoFromURL();
 
-    if (!cpf) {
+    
+
+    function validaUsuarioAdmin(){
+      if (!cpf) {
       // Se não tiver CPF na URL, redireciona ou mostra erro
       alert("CPF não informado na URL.");
       window.location.href = "index.html";
@@ -78,4 +81,5 @@
         .catch(error => {
           console.error("Erro na verificação de admin:", error);
         });
+    }
     }

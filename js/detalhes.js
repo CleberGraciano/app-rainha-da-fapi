@@ -53,14 +53,39 @@ const tiposUrl = `${API_BASE_URL}/tipos-avaliacao`;
       avaliacoesContainer.appendChild(div);
     }
 
-    let qtdAvaliacoes = 0;
-    fetch(tiposUrl)
-      .then(res => res.json())
-      .then(data => {
-        qtdAvaliacoes = data.length;
-        data.forEach(tipo => criarBlocoAvaliacao(tipo));
-      })
-      .catch(err => console.error('Erro ao buscar tipos de avaliação:', err));
+   let qtdAvaliacoes = 0;
+const MAX_TENTATIVAS = 10;
+const INTERVALO_RETRY_MS = 2000;
+
+function carregarAvaliacoesComPolling(tentativa = 1) {
+  loader.style.display = 'block';
+  loader.textContent = `Carregando avaliações... (tentativa ${tentativa})`;
+
+  fetch(tiposUrl)
+    .then(res => {
+      if (!res.ok) throw new Error("Resposta não OK");
+      return res.json();
+    })
+    .then(data => {
+      if (!data || data.length === 0) {
+        throw new Error("Lista de avaliações vazia");
+      }
+
+      qtdAvaliacoes = data.length;
+      data.forEach(tipo => criarBlocoAvaliacao(tipo));
+      loader.style.display = 'none';
+    })
+    .catch(err => {
+      console.warn(`Tentativa ${tentativa} falhou:`, err.message);
+      if (tentativa < MAX_TENTATIVAS) {
+        setTimeout(() => carregarAvaliacoesComPolling(tentativa + 1), INTERVALO_RETRY_MS);
+      } else {
+        loader.textContent = "Erro ao carregar avaliações. Tente novamente.";
+      }
+    });
+}
+
+carregarAvaliacoesComPolling();
 
     async function enviarPontuacao(participanteId, notasSelecionadas, cpfJurado) {
       const url = `${API_BASE_URL}/participantes/${participanteId}/jurado/${cpfJurado}/pontuacoes`;
@@ -103,3 +128,5 @@ const tiposUrl = `${API_BASE_URL}/tipos-avaliacao`;
         alert('Favor selecione todas avaliações.');
       }
     };
+
+    
