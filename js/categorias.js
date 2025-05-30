@@ -5,13 +5,9 @@
   // Cores para alternar (opcional)
   const cores = ['#d61a92', '#f46c00', '#0274c9', '#00184c', '#6a1b9a', '#00897b'];
 
-  const cpfJurado = getCpfJuradoFromURL();
+  const cpfJurado = sessionStorage.getItem("cpf");
 
-  // Função para pegar parâmetros da URL
-    function getCpfJuradoFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('cpfJurado');
-    }
+
 
   // Função para criar e inserir os cards
   async function carregarCategorias() {
@@ -32,7 +28,10 @@
         card.style.backgroundColor = cor;
         card.textContent = categoria.nome; // ajuste para o campo real da API
         card.onclick = () => {
-            window.location.href = `participantes.html?id=${categoria.id}&cpfJurado=${cpfJurado}`;
+          sessionStorage.setItem("cpf", cpf);
+          sessionStorage.setItem("idCategoria", categoria.id);
+          window.location.href = "participantes.html";
+           // window.location.href = `participantes.html?id=${categoria.id}&cpfJurado=${cpfJurado}`;
           };
 
 
@@ -50,18 +49,17 @@
   
 
 
-    const cpf = getCpfJuradoFromURL();
+    const cpf = sessionStorage.getItem("cpf");
 
     
 
     function validaUsuarioAdmin(){
-      if (!cpf) {
-      // Se não tiver CPF na URL, redireciona ou mostra erro
-      alert("CPF não informado na URL.");
-      window.location.href = "index.html";
-    } else {
+
+    if (!sessionStorage.getItem("cpf")) {
+        window.location.href = "index.html";
+      } else {
       // Chamada para a API para verificar se é admin
-      fetch(`${API_BASE_URL}/usuarios/verifica-admin/${cpf}`)
+      fetch(`${API_BASE_URL}/usuarios/verifica-admin/${sessionStorage.getItem("cpf")}`)
         .then(response => {
           if (!response.ok) {
             throw new Error("Erro ao verificar admin");

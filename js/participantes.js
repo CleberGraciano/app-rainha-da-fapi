@@ -1,7 +1,10 @@
 
 const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get("id"); // id da categoria
-  const cpfJurado = urlParams.get("cpfJurado");
+  const id = sessionStorage.getItem("idCategoria"); // id da categoria
+  const cpf = sessionStorage.getItem("cpf");
+
+  console.log(id);
+  console.log(cpf);
 
   let participantesOriginais = [];
 
@@ -38,7 +41,12 @@ const urlParams = new URLSearchParams(window.location.search);
 
       if (!p.votado) {
         botao.onclick = () => {
-          window.location.href = `detalhes.html?id=${p.id}&categoria=${p.categoria.nome}&cpfJurado=${cpfJurado}`;
+          sessionStorage.setItem("cpf", cpf);
+          sessionStorage.setItem("idParticipante", p.id);
+
+          sessionStorage.setItem("categoria", p.categoria.nome);
+          window.location.href = 'detalhes.html';
+          //window.location.href = `detalhes.html?id=${p.id}&categoria=${p.categoria.nome}&cpfJurado=${cpfJurado}`;
         };
       } else {
         botao.disabled = true;
@@ -71,7 +79,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
       // Buscar IDs dos participantes já votados pelo jurado nessa categoria
       const votosRes = await fetch(
-        `${API_BASE_URL}/pontuacoes/jurado/${cpfJurado}/categoria/${id}/participantes-votados`
+        `${API_BASE_URL}/pontuacoes/jurado/${cpf}/categoria/${id}/participantes-votados`
       );
       const idsVotados = await votosRes.json();
 
@@ -93,7 +101,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
   async function verificarVotoParticipante(participanteId) {
     try {
-      const url = `${API_BASE_URL}/pontuacoes/${participanteId}/jurado/${cpfJurado}/ja-votou`;
+      const url = `${API_BASE_URL}/pontuacoes/${participanteId}/jurado/${cpf}/ja-votou`;
       const res = await fetch(url);
       if (!res.ok) throw new Error('Erro na verificação de voto');
       return await res.json();
@@ -129,10 +137,10 @@ const urlParams = new URLSearchParams(window.location.search);
     setInterval(async () => {
       for (const participante of participantesOriginais) {
         if (!participante.votado) {
-          const votou = await verificarVotoParticipante(participante.id);
+          const votou = await verificarVotoParticipante(id);
           if (votou) {
             participante.votado = true;
-            atualizarBotaoVoto(participante.id, true);
+            atualizarBotaoVoto(id, true);
           }
         }
       }
@@ -141,20 +149,11 @@ const urlParams = new URLSearchParams(window.location.search);
 
   carregarParticipantes();
 
-   // Função para pegar parâmetros da URL
-    function getCpfJuradoFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('cpfJurado');
-    }
-
-   const cpf = getCpfJuradoFromURL();
 
   function validaUsuarioAdmin(){
-      if (!cpf) {
-      // Se não tiver CPF na URL, redireciona ou mostra erro
-      alert("CPF não informado na URL.");
-      window.location.href = "index.html";
-    } else {
+    if (!sessionStorage.getItem("cpf")) {
+        window.location.href = "index.html";
+      } else {
       // Chamada para a API para verificar se é admin
       fetch(`${API_BASE_URL}/usuarios/verifica-admin/${cpf}`)
         .then(response => {

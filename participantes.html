@@ -20,26 +20,36 @@
 
       
 
-      .top-bar {
-        background: linear-gradient(to right, #1b1464, #d4145a);
-        color: white;
-        padding: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+        .navbar-gradient {
+      background: linear-gradient(to right, #1b1464, #d4145a);
+    }
 
-      .avatar {
-        width: 55px;
-      height: 55px;
-      background-color: rgb(8, 8, 8);
-      color: black;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
+     .avatar {
+      width: 80px;
+      height: 80px;
+  
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+      .logout-button {
+  padding: 8px 16px;
+  background-color: white;
+  color: #d4148d; /* tom do degradê */
+  border: 2px solid #000105;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #000105;
+  color: white;
+}
 
       .search-bar {
         background-color: #f1f1f1;
@@ -132,14 +142,20 @@
     }
     </style>
   </head>
-  <body>
+  <body onload="validaUsuarioAdmin()">
 
  
 </div>
-    <div class="top-bar">
-      <div></div>
-      <div class="avatar"><img src="img/logo-concurso.png" width="60px" height="60px"></div>
-    </div>
+    <!-- Navbar -->
+<nav class="navbar navbar-gradient px-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="avatar">
+      <img src="img/logo-concurso.png" width="60px" height="60px"></div>
+     <button class="logout-button"  onclick="logout()">
+    <i class="fas fa-user-shield" ></i> SAIR
+  </button>
+  </div>
+</nav>
 
     <div class="search-bar">
       <input type="text" placeholder="Buscar por código ou nome..." />

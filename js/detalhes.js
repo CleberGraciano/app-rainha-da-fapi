@@ -1,9 +1,10 @@
 
 const tiposUrl = `${API_BASE_URL}/tipos-avaliacao`;
+
     const avaliacoesContainer = document.getElementById('avaliacoes');
-    const participanteId = new URLSearchParams(window.location.search).get('id');
-    const cpfJurado = new URLSearchParams(window.location.search).get('cpfJurado');
-    const nomeCat = new URLSearchParams(window.location.search).get('categoria');
+    const participanteId = sessionStorage.getItem("idParticipante");
+    const cpfJurado = sessionStorage.getItem("cpf");
+    const nomeCat = sessionStorage.getItem("categoria");
     const participanteUrl = `${API_BASE_URL}/participantes/${participanteId}`;
 
     const nomeCategoria = document.getElementById("categoria");
@@ -59,7 +60,7 @@ const INTERVALO_RETRY_MS = 2000;
 
 function carregarAvaliacoesComPolling(tentativa = 1) {
   loader.style.display = 'block';
-  loader.textContent = `Aguarde Enviando votação ... )`;
+  loader.textContent = 'Aguarde Enviando votação ...';
 
   fetch(tiposUrl)
     .then(res => {
@@ -97,7 +98,7 @@ carregarAvaliacoesComPolling();
       });
     }
 
-    async function verificarEVotar() {
+    async function verificarEVotar(participanteId, cpfJurado) {
       loader.style.display = 'block';
       enviarBtn.disabled = true;
       enviarBtn.classList.remove("ativa");
@@ -123,10 +124,38 @@ carregarAvaliacoesComPolling();
 
     enviarBtn.onclick = () => {
       if (Object.keys(notasSelecionadas).length === qtdAvaliacoes) {
-        verificarEVotar();
+        verificarEVotar(participanteId, cpfJurado);
       } else {
         alert('Favor selecione todas avaliações.');
       }
     };
+
+    function validaUsuarioAdmin(){
+    if (!sessionStorage.getItem("cpf")) {
+        window.location.href = "index.html";
+      } else {
+      // Chamada para a API para verificar se é admin
+      fetch(`${API_BASE_URL}/usuarios/verifica-admin/${cpfJurado}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao verificar admin");
+          }
+          return response.json(); // Espera boolean ou objeto com `admin: true`
+        })
+        .then(data => {
+          const isAdmin = typeof data === "boolean" ? data : data.admin;
+          if (isAdmin) {
+            const btn = document.getElementById("btnAdmin");
+            btn.style.display = "inline-block";
+            btn.addEventListener("click", () => {
+              window.location.href = "./painel-admin/index.html"; // redireciona para o painel
+            });
+          }
+        })
+        .catch(error => {
+          console.error("Erro na verificação de admin:", error);
+        });
+    }
+    }
 
     

@@ -56,10 +56,7 @@ function login() {
     .catch(err => alert(err.message));
 }
 
-function logout() {
-  sessionStorage.clear();
-  window.location.href = "index.html";
-}
+
 
 
 

@@ -97,11 +97,10 @@
       border: 2px solid #4a861a;
     }
 
-    .avatar {
-      width: 55px;
-      height: 55px;
-      background-color: rgb(8, 8, 8);
-      color: black;
+   .avatar {
+      width: 80px;
+      height: 80px;
+  
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -109,11 +108,22 @@
       font-weight: bold;
     }
 
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+      .logout-button {
+  padding: 8px 16px;
+  background-color: white;
+  color: #d4148d; /* tom do degradê */
+  border: 2px solid #000105;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #000105;
+  color: white;
+}
+
 
     .enviar {
       display: block;
@@ -168,10 +178,14 @@
     }
   </style>
 </head>
-<body>
+<body onload="validaUsuarioAdmin()">
   <div class="top-bar">
-    <div></div>
-    <div class="avatar"><img src="img/logo-concurso.png" width="60" height="60" loading="lazy"></div>
+    
+    <div class="avatar"><img src="img/logo-concurso.png" width="60" height="60" loading="lazy">
+    </div>
+    <button class="logout-button"  onclick="logout()">
+    <i class="fas fa-user-shield" ></i> SAIR
+  </button>
   </div>
 
   <div class="categoria" id="categoria">

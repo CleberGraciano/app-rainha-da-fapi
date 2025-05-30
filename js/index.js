@@ -27,8 +27,11 @@ function limparCpf(cpf) {
 
         if (response.ok) {
           alert("Bem vindo ao Sistema, Login realizado com sucesso!!!");
-          // Login OK, redireciona com o cpf na URL
-          window.location.href = `categorias.html?cpfJurado=${encodeURIComponent(limparCpf(cpf))}`;
+
+
+          sessionStorage.setItem("cpf", cpf);
+          window.location.href = "categorias.html";
+          //window.location.href = `categorias.html?cpfJurado=${encodeURIComponent(limparCpf(cpf))}`;
         } else if (response.status === 404 || response.status === 403) {
           alert("Jurado não cadastrado.");
         } else {

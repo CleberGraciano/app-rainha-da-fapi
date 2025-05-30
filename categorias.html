@@ -15,7 +15,7 @@
       
     }
     .navbar-gradient {
-      background: linear-gradient(to right, #0a1a42, #d41d8c);
+      background: linear-gradient(to right, #1b1464, #d4145a);
     }
 
     .category-card {
@@ -37,10 +37,9 @@
     }
 
     .avatar {
-      width: 55px;
-      height: 55px;
-      background-color: rgb(8, 8, 8);
-      color: black;
+      width: 80px;
+      height: 80px;
+  
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -75,19 +74,34 @@
     #btnAdmin:hover {
       background-color: #0056b3;
     }
+
+    .logout-button {
+  padding: 8px 16px;
+  background-color: white;
+  color: #d4148d; /* tom do degradê */
+  border: 2px solid #000105;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #000105;
+  color: white;
+}
   </style>
 </head>
 <body onload="validaUsuarioAdmin()">
 
- 
-
 <!-- Navbar -->
 <nav class="navbar navbar-gradient px-3">
   <div class="container-fluid d-flex justify-content-between align-items-center">
-    <button class="btn text-white" type="button">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="avatar"><img src="img/logo-concurso.png" width="60px" height="60px"></div>
+    <div class="avatar">
+      <img src="img/logo-concurso.png" width="60px" height="60px"></div>
+     <button class="logout-button"  onclick="logout()">
+    <i class="fas fa-user-shield" ></i> SAIR
+  </button>
   </div>
 </nav>
 
