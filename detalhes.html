@@ -176,6 +176,16 @@
       margin-top: 1rem;
       font-weight: bold;
     }
+    footer {
+ 
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+ 
+  padding: 5px 0;
+}
   </style>
 </head>
 <body onload="validaUsuarioJurado()">
@@ -207,10 +217,13 @@
   <div class="avaliacoes" id="avaliacoes"></div>
 
   <button class="enviar" id="enviarNotas">ENVIAR NOTAS</button>
-  <button class="voltar" onclick="javascript:history.back()" >
-   &#8592; Voltar
+  <button class="voltar" onclick="javascript:history.back()" > &#8592; Voltar
   </button>
+
   
+   <footer class="text-center text-muted small " style=" font-size: 0.75rem; padding: 5px 0; color: #000105;">
+  &copy; <script>document.write(new Date().getFullYear())</script> - Criado por Cleber Batista Graciano · (11) 96482-6534
+</footer>
   <script src="js/config.js"></script>
   <script defer src="js/detalhes.js"></script>
 </body>

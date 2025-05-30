@@ -13,6 +13,20 @@ body {
   align-items: center;
   height: 100vh;
   text-align: center;
+    flex-direction: column;
+}
+
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  background-color: black;
+  padding: 5px 0;
 }
 
 .container {
