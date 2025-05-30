@@ -1,4 +1,7 @@
 
+   if (!sessionStorage.getItem("cpf")) {
+    window.location.href = "index.html";
+  } else {
 const urlParams = new URLSearchParams(window.location.search);
   const id = sessionStorage.getItem("idCategoria"); // id da categoria
   const cpf = sessionStorage.getItem("cpf");
@@ -149,4 +152,4 @@ function iniciarPolling() {
   carregarParticipantes();
 
 
-  
+}

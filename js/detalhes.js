@@ -1,3 +1,6 @@
+   if (!sessionStorage.getItem("cpf")) {
+    window.location.href = "index.html";
+  } else {
 
 const tiposUrl = `${API_BASE_URL}/tipos-avaliacao`;
 
@@ -130,4 +133,4 @@ carregarAvaliacoesComPolling();
       }
     };
 
-    
+  }

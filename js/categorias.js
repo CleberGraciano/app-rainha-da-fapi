@@ -1,4 +1,7 @@
 
+   if (!sessionStorage.getItem("cpf")) {
+    window.location.href = "index.html";
+  } else {
 // URL da API de categorias (substitua pela real)
   const API_URL = `${API_BASE_URL}/categorias`;
 
@@ -44,5 +47,5 @@
   // Executa ao carregar a página
   carregarCategorias();
 
-
+  }
   
