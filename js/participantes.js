@@ -131,22 +131,21 @@ const urlParams = new URLSearchParams(window.location.search);
     }
   }
 
-  function iniciarPolling() {
-    const intervalo = 10; // 1 segundos
+function iniciarPolling() {
+  const intervalo = 1000; // 1 segundo
 
-    setInterval(async () => {
-      for (const participante of participantesOriginais) {
-        if (!participante.votado) {
-          const votou = await verificarVotoParticipante(id);
-          if (votou) {
-            participante.votado = true;
-            atualizarBotaoVoto(id, true);
-          }
+  setInterval(async () => {
+    for (const participante of participantesOriginais) {
+      if (!participante.votado) {
+        const votou = await verificarVotoParticipante(participante.id); // corrigido
+        if (votou) {
+          participante.votado = true;
+          atualizarBotaoVoto(participante.id, true); // corrigido
         }
       }
-    }, intervalo);
-  }
-
+    }
+  }, intervalo);
+}
   carregarParticipantes();
 
 
